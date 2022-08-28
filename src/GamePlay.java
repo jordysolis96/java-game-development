@@ -56,6 +56,38 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
         //ball
         g.setColor(Color.green);
         g.fillOval(ballposX, ballposY, 20, 20);
+
+        //sets messages
+        g.setColor(Color.black);
+        g.setFont(new Font("serif", Font.BOLD, 25));
+        //actually creates string
+        g.drawString("Score:" + score, 300,  30);
+
+        if(totalBricks <= 0){
+            play = false;
+            ballXdir = 0;
+            ballYdir = 0;
+            g.setColor(Color.green);
+            g.setFont(new Font("serif", Font.BOLD, 30));
+            g.drawString("Winner! Score: " + score, 190, 300);
+
+            g.setFont(new Font("serif", Font.BOLD, 20));
+            g.drawString("Press Enter to Restart!", 230, 350);
+        }
+
+        //checks if ball goes out of bounds, if so game over message will be prompted
+        if(ballposY > 570){
+            play = false;
+            ballXdir = 0;
+            ballYdir = 0;
+            g.setColor(Color.red);
+            g.setFont(new Font("serif", Font.BOLD, 30));
+            g.drawString("Game Over, Score: " + score, 190,300);
+
+            g.setFont(new Font("serif", Font.BOLD,  20));
+            g.drawString("Press Enter to Restart!", 230, 350);
+        }
+
         g.dispose();
     }
 
@@ -70,9 +102,39 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
         //Ball - Pedal interaction
             if(new Rectangle(ballposX, ballposY, 20, 30).intersects(new Rectangle(playerX, 550, 100, 8))){
                 ballYdir = -ballYdir;
-            };
+            }
+            //adds brick interaction
+            for(int i = 0; i < map.map.length; i++){
+                for(int j = 0; j < map.map[0].length; j++){
+                    //assesses bricks height and width from our map
+                    if(map.map[i][j] > 0){
+                        int brickX = j * map.brickWidth + 80;
+                        int brickY = i * map.brickHeight + 50;
+                        int brickWidth = map.brickWidth;
+                        int brickHeight = map.brickHeight;
 
-            //makes ball bounce back
+                        Rectangle rect = new Rectangle(brickX, brickY, brickWidth, brickHeight);
+                        Rectangle ballRect = new Rectangle(ballposX, ballposY, 20, 20);
+                        Rectangle brickRect = rect;
+//                        checks if ball interacts with the brick
+                         if(ballRect.intersects(brickRect)){
+                             //removes brick by setting value to 0 at that bricks col and row
+                             map.setBrickValue(0, i, j);
+                             totalBricks--;
+                             score+=5;
+
+                             //will bounce ball back when brick is broken
+                             if(ballposX + 19 <= brickRect.x || ballposX + 1 <= brickRect.x + brickRect.width){
+                                 ballXdir = -ballXdir;
+                             }else{
+                                 ballYdir = -ballYdir;
+                             }
+                         }
+                    }
+                }
+            }
+
+            //makes ball bounce back(reverses direction)
             ballposX += ballXdir;
             ballposY += ballYdir;
             if(ballposX < 0){
@@ -100,7 +162,7 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
         //checks if key event is clicking right arrow?
         if(e.getKeyCode() == KeyEvent.VK_RIGHT){
             if(playerX >= 600){
-                //if player tries tomove past 600
+                //if player tries to move past 600
                 //it will set position to 600 to avoid pedal going out fo bounds.
                 playerX = 600;
             }else{
@@ -114,6 +176,24 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
                 playerX = 10;
             }else{
                 moveLeft();
+            }
+        }
+
+        //GAME RESET FUNCTIONALITY
+        //resets game when event listener is fired off when you press enter
+        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+            if(!play){
+                play = true;
+                ballposX = 120;
+                ballposY = 350;
+                ballXdir = -1;
+                ballYdir = -2;
+                score = 0;
+                totalBricks = 21;
+                map = new MapGenerator(3,7);
+
+                //will repaint the map back to the initial state of the game
+                repaint();
             }
         }
     }
