@@ -24,12 +24,12 @@ public class MapGenerator {
             for(int j = 0; j < map[0].length; j++){
                 if(map[i][j] > 0){
                     //creates bricks
-                    g.setColor(Color.black);
+                    g.setColor(Color.white);
                     //adds space from brick to wall
                     g.fillRect(j*brickWidth + 80, i*brickHeight + 50, brickWidth, brickHeight);
                     //adds lines between brick
                     g.setStroke(new BasicStroke(3));
-                    g.setColor(Color.white);
+                    g.setColor(Color.black);
                     g.drawRect(j*brickWidth + 80, i*brickHeight + 50, brickWidth, brickHeight);
 
                 }

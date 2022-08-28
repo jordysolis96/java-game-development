@@ -37,28 +37,28 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
     public void paint(Graphics g){
 
-        //bg?
-        g.setColor(Color.white);
+        //background
+        g.setColor(Color.black);
         g.fillRect(1,1,692,592);
 
         map.draw((Graphics2D) g);
 
-        //container?
+        //border
         g.setColor(Color.yellow);
         g.fillRect(0,0,3,592);
         g.fillRect(0,0,692,3);
         g.fillRect(691,0,3,592);
 
         //pedal
-        g.setColor(Color.blue);
+        g.setColor(Color.yellow);
         g.fillRect(playerX, 550, 100, 8);
 
         //ball
-        g.setColor(Color.green);
+        g.setColor(Color.blue);
         g.fillOval(ballposX, ballposY, 20, 20);
 
         //sets messages
-        g.setColor(Color.black);
+        g.setColor(Color.white);
         g.setFont(new Font("serif", Font.BOLD, 25));
         //actually creates string
         g.drawString("Score:" + score, 300,  30);
